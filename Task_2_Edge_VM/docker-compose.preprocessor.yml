@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  preprocessor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pm25-preprocessor
+    environment:
+      # MQTT (Edge)
+      - MQTT_BROKER=emqx
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=uo/pm25
+
+      # RabbitMQ (Cloud) – replace with actual Cloud VM IP or DNS
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_QUEUE=pm25_daily_avg
+
+      - RABBITMQ_USER=student
+      - RABBITMQ_PASSWORD=student
+
+    networks:
+      - iot-net
+
+networks:
+  iot-net:
+    external: true
