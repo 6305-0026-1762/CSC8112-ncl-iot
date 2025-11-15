@@ -1,6 +1,3 @@
-Here’s a more complete `README.md` based on what you’ve built so far (Tasks 1–3 + local training for Task 4), without changing any of your filenames or compose files.
-
-````markdown
 # CSC8112 – IoT Data Pipeline (Tasks 1–3 + Local Task 4)
 
 This repository implements the first parts of the CSC8112 coursework:
