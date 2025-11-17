@@ -18,7 +18,7 @@ docker run -d \
 ### Once injector is done
 
 ```
-docker build -t pm25-predictor .
+docker build -t pm25-predictor ./Task_3_Cloud_VM
 ```
 ```
 docker run \
