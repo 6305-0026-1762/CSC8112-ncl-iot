@@ -1,3 +1,12 @@
+## Before starting (both cloud and edge) -
+
+```
+docker system prune -a
+
+docker container prune
+```
+
+
 ## On CLOUD VM -
 
 ```
@@ -15,7 +24,7 @@ docker run -d \
   rabbitmq:3-management
 ```
 
-### Once injector is done
+### Once the injector is done
 
 ```
 docker build -t pm25-predictor ./Task_3_Cloud_VM
@@ -87,4 +96,27 @@ docker run \
   -e MQTT_BROKER=emqx \
   -e MQTT_PORT=1883 \
   pm25-injector
+```
+
+### Useful commands -
+
+#### To check running (and stopped) containers
+```
+docker ps -a
+```
+
+#### To copy files from container to VM home
+
+##### In EDGE
+```
+docker cp pm25-inference:/app/pm25_time_series_predictions.png .
+
+docker cp pm25-inference:/app/predicted_class_counts.png .
+```
+
+##### In CLOUD
+```
+docker cp pm25-predictor:/app/pm25_forecast.png .
+
+docker cp pm25-predictor:/app/pm25_daily_avg.png .
 ```
