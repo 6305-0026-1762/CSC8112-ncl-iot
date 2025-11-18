@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  emqx:
+    image: emqx/emqx:5.3
+    container_name: emqx
+    ports:
+      - "1883:1883"
+      - "18083:18083"
+    networks:
+      - iot-net
+    restart: on-failure
+
+  injector:
+    build:
+      context: ./Task_1_Edge
+      dockerfile: Dockerfile
+    container_name: pm25-injector
+    environment:
+      - MQTT_BROKER=emqx
+      - MQTT_PORT=1883
+    depends_on:
+      - emqx
+    networks:
+      - iot-net
+    restart: on-failure
+
+  preprocessor:
+    build:
+      context: ./Task_2_Edge_VM
+      dockerfile: Dockerfile
+    container_name: pm25-preprocessor
+    environment:
+      - MQTT_BROKER=emqx
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=uo/pm25
+
+      - RABBITMQ_HOST=192.168.0.100
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_QUEUE=pm25_daily_avg
+      - RABBITMQ_USER=student
+      - RABBITMQ_PASSWORD=student
+    depends_on:
+      - emqx
+    networks:
+      - iot-net
+    restart: on-failure
+
+  pm25-inference:
+    build:
+      context: ./Task_4_Edge_VM
+      dockerfile: Dockerfile
+    container_name: pm25-inference
+    environment:
+      - MQTT_BROKER=emqx
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=uo/pm25
+      - TFLITE_MODEL_PATH=pm25_model.tflite
+    depends_on:
+      - emqx
+    networks:
+      - iot-net
+    restart: on-failure
+
+networks:
+  iot-net:
+    external: true

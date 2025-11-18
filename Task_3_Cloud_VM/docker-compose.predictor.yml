@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  predictor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pm25-predictor
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_QUEUE=pm25_daily_avg
+      - RABBITMQ_USER=student
+      - RABBITMQ_PASSWORD=student
+    networks:
+      - iot-net
+
+networks:
+  iot-net:
+    external: true
+
